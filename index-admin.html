@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="el" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Shop - Κοινόχρηστες & Ατομικές Συνδρομές</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            cyan: '#06b6d4',
+                            teal: '#14b8a6',
+                            pink: '#ec4899',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            purple: '#a855f7',
+                            dark: '#080c14',
+                            card: '#0f172a',
+                            border: 'rgba(255, 255, 255, 0.08)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 5s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s infinite linear',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(99, 102, 241, 0.2)' },
+                            '100%': { boxShadow: '0 0 35px rgba(6, 182, 212, 0.5)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 15% 0%, rgba(124,58,237,.22), transparent 34%), radial-gradient(circle at 90% 18%, rgba(34,211,238,.16), transparent 30%), #050611;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(10, 12, 28, 0.72);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: linear-gradient(145deg, rgba(38, 24, 73, .58) 0%, rgba(9, 18, 38, .82) 58%, rgba(6, 42, 52, .55) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px -10px rgba(99, 102, 241, 0.25);
+        }
+
+        .glass-modal {
+            background: rgba(11, 15, 25, 0.94);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 40%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #7c3aed 0%, #ec4899 48%, #06b6d4 100%);
+            background-size: 200% auto;
+            transition: all 0.3s ease;
+        }
+
+        .gradient-btn:hover {
+            background-position: right center;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.45);
+        }
+
+        .private-btn {
+            background: linear-gradient(135deg, #f43f5e 0%, #d946ef 48%, #7c3aed 100%);
+            background-size: 200% auto;
+            transition: all 0.3s ease;
+        }
+
+        .private-btn:hover {
+            background-position: right center;
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.45);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060911;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-brand-500 selection:text-white">
+
+    <div class="bg-gradient-to-r from-brand-600 via-purple-600 to-brand-cyan text-white text-xs md:text-sm py-2.5 px-4 text-center font-semibold flex items-center justify-center gap-2 relative z-50">
+        <span class="bg-white/20 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">ΝΕΟ</span>
+        <span>🎉 Τώρα διαθέσιμες και 100% Ατομικές / Προσωπικές Συνδρομές με δικά σας αποκλειστικά Credentials!</span>
+    </div>
+
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- BRAND LOGO -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-brand-cyan flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid fa-shapes text-white text-2xl"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-black tracking-tight text-white flex items-center">
+                        SPLIT<span class="text-brand-cyan font-black ml-1">SHOP</span>
+                    </span>
+                    <span class="block text-[10px] text-gray-400 font-semibold tracking-widest uppercase -mt-1">Shared & Private Subscriptions</span>
+                </div>
+            </a>
+
+            <!-- NAV LINKS - DESKTOP -->
+            <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-gray-300">
+                <a href="#marketplace" class="hover:text-brand-cyan transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-compass text-xs opacity-70"></i> Ανακάλυψε
+                </a>
+                <a href="#marketplace" onclick="setPlanType('private')" class="text-pink-400 hover:text-pink-300 transition-colors flex items-center gap-1.5 font-bold">
+                    <i class="fa-solid fa-user-lock text-xs"></i> Ατομικοί Λογαριασμοί
+                </a>
+                <a href="#how-it-works" class="hover:text-brand-cyan transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-layer-group text-xs opacity-70"></i> Πώς Λειτουργεί
+                </a>
+                <a href="#become-owner" class="hover:text-amber-400 transition-colors flex items-center gap-1.5 text-amber-300/90 font-bold">
+                    <i class="fa-solid fa-crown text-xs text-amber-400"></i> Γίνε Owner
+                </a>
+                <a href="#faq" class="hover:text-brand-cyan transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-question text-xs opacity-70"></i> FAQ
+                </a>
+            </nav>
+
+            <!-- SEARCH BAR & USER ACTIONS -->
+            <div class="flex items-center gap-3">
+                <!-- Search Box -->
+                <div class="relative hidden sm:block w-44 xl:w-56">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="headerSearchInput" onkeyup="handleGlobalSearch(this.value)" placeholder="Αναζήτηση..." 
+                        class="w-full bg-slate-900/90 border border-white/10 rounded-full py-2 pl-9 pr-4 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+                </div>
+
+                <!-- ADMIN BUTTON -->
+                <button onclick="openAdmin()" title="Admin" class="relative p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-violet-300 border border-violet-400/20 transition-colors">
+                    <i class="fa-solid fa-user-shield text-sm"></i>
+                </button>
+
+                <!-- CART BUTTON -->
+                <button onclick="toggleCartModal()" class="relative p-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-gray-200 border border-white/10 transition-colors">
+                    <i class="fa-solid fa-cart-shopping text-sm"></i>
+                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-brand-pink text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
+                </button>
+
+                <!-- LOGIN BUTTON -->
+                <button onclick="showToast('Η λειτουργία σύνδεσης χρήστη είναι ενεργή!', 'info')" class="hidden md:flex items-center gap-2 gradient-btn text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Σύνδεση</span>
+                </button>
+
+                <!-- MOBILE MENU TOGGLE -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl bg-slate-800 text-gray-300 hover:text-white border border-white/10">
+                    <i id="menuIcon" class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MOBILE MENU DROPDOWN -->
+        <div id="mobileMenu" class="hidden lg:hidden border-t border-white/10 bg-slate-950/95 px-4 pt-4 pb-6 space-y-3 text-sm">
+            <input type="text" onkeyup="handleGlobalSearch(this.value)" placeholder="Αναζήτηση (π.χ. Netflix, ChatGPT)..." class="w-full mb-2 bg-slate-900 border border-white/10 rounded-xl py-2.5 px-4 text-sm text-white">
+            <a href="#marketplace" onclick="toggleMobileMenu(); setPlanType('split')" class="block py-2.5 text-gray-300 hover:text-white border-b border-white/5"><i class="fa-solid fa-users w-6"></i> Κοινόχρηστες (Split)</a>
+            <a href="#marketplace" onclick="toggleMobileMenu(); setPlanType('private')" class="block py-2.5 text-pink-400 font-bold border-b border-white/5"><i class="fa-solid fa-user-lock w-6"></i> Ατομικές (Private)</a>
+            <a href="#how-it-works" onclick="toggleMobileMenu()" class="block py-2.5 text-gray-300 hover:text-white border-b border-white/5"><i class="fa-solid fa-layer-group w-6"></i> Πώς Λειτουργεί</a>
+            <a href="#become-owner" onclick="toggleMobileMenu()" class="block py-2.5 text-amber-400 font-bold border-b border-white/5"><i class="fa-solid fa-crown w-6"></i> Γίνε Owner</a>
+            <a href="#faq" onclick="toggleMobileMenu()" class="block py-2.5 text-gray-300 hover:text-white"><i class="fa-solid fa-circle-question w-6"></i> FAQ</a>
+            <button onclick="showToast('Σύνδεση χρήστη', 'info'); toggleMobileMenu()" class="w-full mt-2 gradient-btn py-3 rounded-xl font-bold text-center text-white shadow-lg">
+                Σύνδεση / Εγγραφή
+            </button>
+        </div>
+    </header>
+
+    <section class="relative pt-10 pb-16 lg:pt-16 lg:pb-24 overflow-hidden">
+        <!-- Ambient Background Lighting -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[380px] bg-brand-500/20 rounded-full blur-[130px] pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[350px] h-[350px] bg-brand-pink/20 rounded-full blur-[110px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-12 gap-10 items-center">
+                
+                <!-- HERO TEXT -->
+                <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border-brand-500/30 text-brand-cyan text-xs font-bold">
+                        <span class="flex h-2.5 w-2.5 rounded-full bg-brand-cyan animate-ping"></span>
+                        Κοινόχρηστα Slots ή 100% Ατομικοί Λογαριασμοί
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white">
+                        Όλες οι συνδρομές σου.<br>
+                        <span class="gradient-text">Κοινόχρηστες ή Ατομικές</span> στις καλύτερες τιμές!
+                    </h1>
+
+                    <p class="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                        Διάλεξε <strong class="text-cyan-300">Split slots</strong> για μέγιστη οικονομία ή <strong class="text-pink-300">Ατομικούς Λογαριασμούς (Private)</strong> για προσωπικά credentials & πλήρη έλεγχο προφίλ!
+                    </p>
+
+                    <!-- HERO MODE QUICK SWITCH BUTTONS -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
+                        <a href="#marketplace" onclick="setPlanType('split')" class="w-full sm:w-auto gradient-btn px-7 py-3.5 rounded-2xl font-extrabold text-white shadow-xl flex items-center justify-center gap-2.5 text-sm">
+                            <i class="fa-solid fa-users"></i>
+                            <span>Κοινόχρηστες (Split)</span>
+                        </a>
+                        <a href="#marketplace" onclick="setPlanType('private')" class="w-full sm:w-auto private-btn px-7 py-3.5 rounded-2xl font-extrabold text-white shadow-xl flex items-center justify-center gap-2.5 text-sm">
+                            <i class="fa-solid fa-user-lock"></i>
+                            <span>Ατομικές (Private)</span>
+                        </a>
+                    </div>
+
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-2 text-[11px] font-bold">
+                        <span class="px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-400/20 text-violet-200">⚡ Fast setup</span>
+                        <span class="px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-200">🔒 Secure checkout</span>
+                        <span class="px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-400/20 text-pink-200">💬 Support</span>
+                    </div>
+
+                    <!-- TRUST METRICS -->
+                    <div class="pt-6 border-t border-white/10 grid grid-cols-3 gap-4 text-center lg:text-left">
+                        <div>
+                            <span class="block text-xl sm:text-2xl font-black text-white">100%</span>
+                            <span class="text-xs text-gray-400 font-medium">Εγγύηση Λειτουργίας</span>
+                        </div>
+                        <div>
+                            <span class="block text-xl sm:text-2xl font-black text-brand-cyan">16.2K+</span>
+                            <span class="text-xs text-gray-400 font-medium">Ενεργοποιήσεις</span>
+                        </div>
+                        <div>
+                            <span class="block text-xl sm:text-2xl font-black text-pink-400">Instant</span>
+                            <span class="text-xs text-gray-400 font-medium">Άμεση Παράδοση</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REAL-TIME INTERACTIVE CALCULATOR (With Split / Private Switcher) -->
+                <div class="lg:col-span-5">
+                    <div class="glass-panel p-6 rounded-3xl border border-white/15 shadow-2xl relative overflow-hidden">
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-black text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-calculator text-brand-cyan"></i>
+                                    Υπολογιστής Κέρδους
+                                </h3>
+                                <p class="text-xs text-gray-400">Υπολόγισε το όφελός σου:</p>
+                            </div>
+
+                            <!-- TOGGLE SWITCH INSIDE CALCULATOR -->
+                            <div class="bg-slate-900/90 p-1 rounded-xl border border-white/10 flex text-[11px] font-bold">
+                                <button id="calcToggleSplit" onclick="setCalcPlan('split')" class="px-2.5 py-1 rounded-lg bg-brand-500 text-white transition-all">Split</button>
+                                <button id="calcTogglePrivate" onclick="setCalcPlan('private')" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all">Private</button>
+                            </div>
+                        </div>
+
+                        <!-- CALCULATOR SERVICES CHECKBOXES -->
+                        <div class="space-y-2 mb-4 max-h-56 overflow-y-auto pr-1" id="calcServicesList">
+                            <!-- JS Populated -->
+                        </div>
+
+                        <!-- LIVE SAVINGS SUMMARY -->
+                        <div class="bg-slate-950/90 rounded-2xl p-4 border border-white/10 space-y-2">
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span>Επίσημο Κόστος Πάροχου:</span>
+                                <span id="calcOfficialPrice" class="line-through text-red-400 font-semibold">€0.00/μήνα</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-gray-200" id="calcTypeLabel">Τιμή Split Shop:</span>
+                                <span id="calcSplitPrice" class="text-2xl font-black text-brand-cyan">€0.00<span class="text-xs text-gray-400 font-normal">/μήνα</span></span>
+                            </div>
+                            <div class="pt-2 border-t border-white/10 flex justify-between items-center">
+                                <span class="text-xs font-black text-emerald-400 uppercase tracking-wide">Ετήσια Αποταμίευση:</span>
+                                <span id="calcYearlySavings" class="text-lg font-black text-emerald-400">€0.00/έτος</span>
+                            </div>
+                        </div>
+
+                        <button onclick="applyCalcToCart()" class="w-full mt-4 gradient-btn py-3 rounded-xl text-xs font-extrabold text-white shadow-lg flex items-center justify-center gap-2 uppercase tracking-wide">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Προσθήκη Πακέτου στο Καλάθι</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="marketplace" class="py-16 bg-slate-950/80 relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- PLAN TYPE TOGGLE BANNER -->
+            <div class="glass-panel p-3 rounded-2xl border-white/10 mb-8 max-w-2xl mx-auto flex items-center justify-between gap-2 shadow-2xl">
+                <button id="planBtnSplit" onclick="setPlanType('split')" class="flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-brand-600 text-white shadow-lg">
+                    <i class="fa-solid fa-users text-base"></i>
+                    <span>Συνδρομές Split (Κοινοχρηστες)</span>
+                    <span class="hidden sm:inline bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-black">-75%</span>
+                </button>
+                <button id="planBtnPrivate" onclick="setPlanType('private')" class="flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-user-lock text-base text-pink-400"></i>
+                    <span>Ατομικοί Λογαριασμοί (Private)</span>
+                    <span class="hidden sm:inline bg-pink-500/20 text-pink-300 text-[10px] px-2 py-0.5 rounded-full font-black border border-pink-500/30">100% Private</span>
+                </button>
+            </div>
+
+            <!-- MARKETPLACE HEADER & CATEGORY FILTERS -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span id="marketBadge" class="text-xs font-bold text-brand-cyan tracking-widest uppercase">Κοινοχρηστες Συνδρομες</span>
+                    <h2 id="marketTitle" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Διαθέσιμα Slots & Πακέτα</h2>
+                    <p id="marketSub" class="text-gray-400 text-xs sm:text-sm mt-1">Μοιράσου το κόστος και πλήρωσε μόνο το μερίδιό σου.</p>
+                </div>
+
+                <!-- CATEGORY PILLS -->
+                <div class="flex flex-wrap gap-2" id="categoryFilters">
+                    <button onclick="filterCategory('all')" class="cat-btn active border px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-brand-500 border-brand-500 text-white">
+                        Όλες
+                    </button>
+                    <button onclick="filterCategory('streaming')" class="cat-btn border px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-slate-900 border-white/10 text-gray-300 hover:border-brand-500">
+                        🎬 Streaming
+                    </button>
+                    <button onclick="filterCategory('music')" class="cat-btn border px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-slate-900 border-white/10 text-gray-300 hover:border-brand-500">
+                        🎵 Μουσική
+                    </button>
+                    <button onclick="filterCategory('tools')" class="cat-btn border px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-slate-900 border-white/10 text-gray-300 hover:border-brand-500">
+                        🤖 AI & Productivity
+                    </button>
+                    <button onclick="filterCategory('gaming')" class="cat-btn border px-3.5 py-1.5 rounded-full text-xs font-bold transition-all bg-slate-900 border-white/10 text-gray-300 hover:border-brand-500">
+                        🎮 Gaming
+                    </button>
+                </div>
+            </div>
+
+            <!-- MARKETPLACE CARDS GRID -->
+            <div id="servicesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dynamically populated via JavaScript -->
+            </div>
+
+        </div>
+    </section>
+
+    <section id="how-it-works" class="py-20 border-t border-white/5 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold text-brand-pink tracking-widest uppercase">Δύο Επιλογές • 100% Ασφάλεια</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Split Slot vs. Ατομικός Λογαριασμός</h2>
+                <p class="text-gray-400 mt-2 text-sm">Διάλεξε τον τύπο συνδρομής που ταιριάζει καλύτερα στις ανάγκες σου</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Split Slot Card -->
+                <div class="glass-card p-8 rounded-3xl relative border border-brand-500/30">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-cyan text-xs font-bold mb-4">
+                        <i class="fa-solid fa-users"></i> Κοινόχρηστη Συνδρομή (Split)
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-3">Μέγιστη Οικονομία έως -75%</h3>
+                    <ul class="space-y-3 text-xs sm:text-sm text-gray-300 mb-6">
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-emerald-400"></i> Δικό σου προσωπικό PIN προφίλ</li>
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-emerald-400"></i> Αυτόνομο ιστορικό & watchlist</li>
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-emerald-400"></i> Χαμηλότερο μηνιαίο κόστος</li>
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-shield-halved text-brand-cyan"></i> Εγγύηση Split Guarantee</li>
+                    </ul>
+                    <button onclick="setPlanType('split')" class="w-full gradient-btn py-3 rounded-xl font-bold text-xs text-white uppercase tracking-wider">
+                        Δες Κοινόχρηστες
+                    </button>
+                </div>
+
+                <!-- Private Account Card -->
+                <div class="glass-card p-8 rounded-3xl relative border border-pink-500/30">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 text-xs font-bold mb-4">
+                        <i class="fa-solid fa-user-lock"></i> Ατομικός Λογαριασμός (Private)
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-3">100% Πλήρης Έλεγχος & Privacy</h3>
+                    <ul class="space-y-3 text-xs sm:text-sm text-gray-300 mb-6">
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-pink-400"></i> Αποκλειστικό Email & Password</li>
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-pink-400"></i> Δυνατότητα αλλαγής κωδικού/προφίλ</li>
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-pink-400"></i> Χωρίς κανέναν άλλον χρήστη στο λογαριασμό</li>
+                        <li class="flex items-center gap-2.5"><i class="fa-solid fa-bolt text-amber-400"></i> Άμεση αυτόματη παράδοση 24/7</li>
+                    </ul>
+                    <button onclick="setPlanType('private')" class="w-full private-btn py-3 rounded-xl font-bold text-xs text-white uppercase tracking-wider">
+                        Δες Ατομικές
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OWNER PROGRAM SECTION -->
+    <section id="become-owner" class="py-20 bg-gradient-to-b from-slate-950 to-brand-dark border-t border-white/5 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-brand-500/30 grid lg:grid-cols-12 gap-8 items-center relative overflow-hidden">
+                
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-extrabold border border-amber-500/30">
+                        <i class="fa-solid fa-crown"></i> Split Shop Owner Program
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+                        Έχεις οικογενειακή συνδρομή; <span class="gradient-text-gold">Μοιράσου τη & κέρδισε!</span>
+                    </h2>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        Μην αφήνεις τα κενά slots να πηγαίνουν χαμένα. Καταχώρησε τη συνδρομή σου στο Split Shop, συμπλήρωσε τις κενές θέσεις και λάμβανε αυτόματα τη πληρωμή σου κάθε μήνα στον τραπεζικό σου λογαριασμό!
+                    </p>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3 text-sm text-gray-200">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+                            <span>Αυτόματη είσπραξη συνδρομών χωρίς να κυνηγάς πληρωμές</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-gray-200">
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+                            <span>Πλήρης προστασία προσωπικών δεδομένων & κωδικών</span>
+                        </div>
+                    </div>
+
+                    <button onclick="openOwnerModal()" class="gradient-btn px-8 py-4 rounded-2xl font-bold text-white shadow-xl flex items-center gap-3 text-sm">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>Καταχώρησε τη Συνδρομή σου</span>
+                    </button>
+                </div>
+
+                <div class="lg:col-span-5 flex flex-col gap-4">
+                    <div class="bg-slate-950/90 p-6 rounded-2xl border border-white/10 space-y-4">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-gray-400">Εκτιμώμενο Μηνιαίο Κέρδος:</span>
+                            <span class="text-emerald-400 font-extrabold text-xl">+€42.00/μήνα</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-white/5">
+                            <div class="bg-gradient-to-r from-brand-500 via-brand-cyan to-emerald-400 h-full w-4/5 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-20 border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold text-brand-cyan tracking-widest uppercase">Aπορίες</span>
+                <h2 class="text-3xl font-extrabold text-white mt-1">Συχνές Ερωτήσεις (FAQ)</h2>
+            </div>
+
+            <div class="space-y-4" id="faqAccordion">
+                <!-- FAQ Item 1 -->
+                <div class="glass-panel rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(1)" class="w-full p-5 text-left font-semibold text-white flex justify-between items-center hover:bg-white/5 transition-colors">
+                        <span>Ποια είναι η διαφορά μεταξύ Split Slot και Ατομικού (Private) Λογαριασμού;</span>
+                        <i id="faqIcon-1" class="fa-solid fa-chevron-down text-brand-cyan transition-transform"></i>
+                    </button>
+                    <div id="faqAnswer-1" class="hidden p-5 pt-0 text-sm text-gray-300 border-t border-white/5 leading-relaxed">
+                        Στο <strong>Split Slot</strong>, μοιράζεστε μια οικογενειακή συνδρομή με άλλους χρήστες έχοντας το δικό σας αυτόνομο PIN προφίλ στην πιο οικονομική τιμή. Στον <strong>Ατομικό (Private) Λογαριασμό</strong>, λαμβάνετε αποκλειστικά credentials (email & password) μόνο για εσάς με πλήρη δικαιώματα διαχείρισης.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="glass-panel rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(2)" class="w-full p-5 text-left font-semibold text-white flex justify-between items-center hover:bg-white/5 transition-colors">
+                        <span>Πόσο γρήγορα παραλαμβάνω τα στοιχεία πρόσβασης;</span>
+                        <i id="faqIcon-2" class="fa-solid fa-chevron-down text-brand-cyan transition-transform"></i>
+                    </button>
+                    <div id="faqAnswer-2" class="hidden p-5 pt-0 text-sm text-gray-300 border-t border-white/5 leading-relaxed">
+                        Για τις ατομικές συνδρομές η παράδοση γίνεται άμεσα (μέσα σε 1-5 λεπτά στο email σας). Για τα Split slots η ενεργοποίηση ολοκληρώνεται το πολύ σε 15 λεπτά.
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="glass-panel rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(3)" class="w-full p-5 text-left font-semibold text-white flex justify-between items-center hover:bg-white/5 transition-colors">
+                        <span>Τι ισχύει με την Εγγύηση Επιστροφής Χρημάτων;</span>
+                        <i id="faqIcon-3" class="fa-solid fa-chevron-down text-brand-cyan transition-transform"></i>
+                    </button>
+                    <div id="faqAnswer-3" class="hidden p-5 pt-0 text-sm text-gray-300 border-t border-white/5 leading-relaxed">
+                        Όλες οι συνδρομές προστατεύονται από την <strong>Εγγύηση Split Guarantee</strong>. Αν αντιμετωπίσετε οποιοδήποτε πρόβλημα πρόσβασης, αντικαθιστούμε αμέσως το λογαριασμό ή σας επιστρέφουμε τα χρήματά σας.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 py-12 bg-slate-950 text-gray-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-500">
+            &copy; 2026 Split Shop. All rights reserved. Κοινόχρηστες & Ατομικές Συνδρομές.
+        </div>
+    </footer>
+
+    <!-- MODAL: DETAILS & CHECKOUT -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-modal w-full max-w-lg rounded-3xl p-6 sm:p-8 relative border border-white/20 shadow-2xl">
+            <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: OWNER REGISTRATION FORM -->
+    <div id="ownerModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-modal w-full max-w-lg rounded-3xl p-6 sm:p-8 relative border border-white/20 shadow-2xl">
+            <button onclick="closeOwnerModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-amber-500/20 text-amber-400 rounded-2xl text-xl">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Καταχώρηση Συνδρομής</h3>
+                        <p class="text-xs text-gray-400">Μοιράσου τα κενά σου slots</p>
+                    </div>
+                </div>
+                <form onsubmit="handleOwnerSubmit(event)" class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Όνομα Συνδρομής</label>
+                        <input type="text" required placeholder="π.χ. Netflix Premium Ultra HD" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Διαθέσιμα Slots</label>
+                            <input type="number" min="1" max="5" value="2" required class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Τιμή/Slot (€/μήνα)</label>
+                            <input type="number" step="0.5" value="3.5" required class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Email Επικοινωνίας</label>
+                        <input type="email" required placeholder="your@email.com" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <button type="submit" class="w-full gradient-btn py-3.5 rounded-xl font-bold text-xs text-white uppercase tracking-wider mt-2">
+                        Υποβολη Καταχωρισης
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CART -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-modal w-full max-w-md rounded-3xl p-6 relative border border-white/20 shadow-2xl">
+            <button onclick="toggleCartModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-xl font-extrabold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping text-brand-cyan"></i>
+                Το Καλάθι σου
+            </h3>
+
+            <div id="cartItemsContainer" class="space-y-3 max-h-60 overflow-y-auto pr-1 mb-4">
+                <!-- JS Populated -->
+            </div>
+
+            <div class="border-t border-white/10 pt-4 space-y-3">
+                <div class="flex justify-between items-center text-sm font-bold text-white">
+                    <span>Σύνολο:</span>
+                    <span id="cartTotalPrice" class="text-xl text-brand-cyan">€0.00/μήνα</span>
+                </div>
+                <button onclick="checkoutCart()" class="w-full gradient-btn py-3.5 rounded-xl font-bold text-xs text-white uppercase tracking-wider">
+                    Πληρωμή με Revolut
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: REVOLUT CHECKOUT -->
+    <div id="paymentModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="glass-modal w-full max-w-lg rounded-3xl p-6 sm:p-8 relative border border-white/20 shadow-2xl">
+            <button onclick="closePaymentModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white text-lg w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <div class="space-y-5">
+                <div><span class="text-xs font-black uppercase tracking-widest text-pink-400">Secure checkout</span><h3 class="text-2xl font-black text-white mt-1">Πληρωμή με Revolut</h3><p class="text-xs text-gray-400 mt-1">Συμπλήρωσε το όνομά σου για να αντιστοιχίσουμε σωστά την πληρωμή.</p></div>
+                <div><label class="block text-xs font-bold text-gray-300 mb-2">Ονοματεπώνυμο *</label><input id="paymentCustomerName" type="text" autocomplete="name" placeholder="π.χ. Γιώργος Παπαδόπουλος" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-pink-500"></div>
+                <div class="bg-slate-950/90 rounded-2xl border border-white/10 p-4 space-y-2 text-xs"><div class="flex justify-between gap-4"><span class="text-gray-400">Σύνολο</span><strong id="paymentTotal" class="text-white">€0.00</strong></div><div class="flex justify-between gap-4"><span class="text-gray-400">Κωδικός παραγγελίας</span><strong id="paymentOrderId" class="text-brand-cyan">—</strong></div></div>
+                <div class="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-xs text-amber-100 leading-relaxed"><strong>Σημαντικό:</strong> στη σημείωση/αιτιολογία της πληρωμής γράψε το ονοματεπώνυμό σου και τον κωδικό παραγγελίας που εμφανίζεται εδώ.</div>
+                <button onclick="continueToRevolut()" class="w-full private-btn py-4 rounded-2xl font-black text-sm text-white shadow-xl flex items-center justify-center gap-2"><i class="fa-solid fa-arrow-up-right-from-square"></i> Συνέχεια στο Revolut</button>
+                <p class="text-[10px] text-center text-gray-500">Η παραγγελία δεν χαρακτηρίζεται αυτόματα ως πληρωμένη. Η πληρωμή επιβεβαιώνεται μετά την αντιστοίχιση της συναλλαγής.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL: ADMIN -->
+    <div id="adminModal" class="fixed inset-0 z-[80] hidden bg-black/90 backdrop-blur-md overflow-y-auto p-4">
+        <div class="glass-modal w-full max-w-6xl mx-auto my-6 rounded-3xl p-5 sm:p-7 border border-violet-400/20 shadow-2xl">
+            <div class="flex items-center justify-between gap-4 mb-6">
+                <div>
+                    <span class="text-[10px] font-black uppercase tracking-[0.22em] text-violet-400">Split Shop Control</span>
+                    <h3 class="text-2xl font-black text-white mt-1">Admin Dashboard</h3>
+                </div>
+                <button onclick="closeAdmin()" class="w-10 h-10 rounded-xl bg-slate-800 text-gray-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div id="adminSetupView" class="hidden max-w-md mx-auto py-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-2xl bg-violet-500/15 text-violet-300 grid place-items-center mx-auto text-2xl"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h4 class="text-xl font-black text-white mt-4">Δημιουργία Admin</h4>
+                    <p class="text-xs text-gray-400 mt-2">Διάλεξε ένα PIN 6+ ψηφίων/χαρακτήρων. Αποθηκεύεται μόνο σε αυτόν τον browser.</p>
+                </div>
+                <input id="adminSetupPin" type="password" minlength="6" placeholder="Νέο Admin PIN" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                <button onclick="createAdminPin()" class="w-full mt-3 bg-violet-600 hover:bg-violet-500 py-3.5 rounded-xl font-black text-sm text-white">Δημιουργία Admin</button>
+            </div>
+
+            <div id="adminLoginView" class="hidden max-w-md mx-auto py-8">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-2xl bg-violet-500/15 text-violet-300 grid place-items-center mx-auto text-2xl"><i class="fa-solid fa-user-lock"></i></div>
+                    <h4 class="text-xl font-black text-white mt-4">Admin Login</h4>
+                    <p class="text-xs text-gray-400 mt-2">Βάλε το PIN που δημιούργησες σε αυτή τη συσκευή.</p>
+                </div>
+                <input id="adminLoginPin" type="password" placeholder="Admin PIN" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-violet-500">
+                <button onclick="adminLogin()" class="w-full mt-3 bg-violet-600 hover:bg-violet-500 py-3.5 rounded-xl font-black text-sm text-white">Σύνδεση</button>
+            </div>
+
+            <div id="adminDashboardView" class="hidden">
+                <div class="grid sm:grid-cols-3 gap-3 mb-6">
+                    <div class="rounded-2xl bg-slate-900 border border-white/10 p-4"><div class="text-xs text-gray-400">Παραγγελίες</div><div id="adminOrdersCount" class="text-2xl font-black text-white mt-1">0</div></div>
+                    <div class="rounded-2xl bg-slate-900 border border-white/10 p-4"><div class="text-xs text-gray-400">Σε αναμονή</div><div id="adminPendingCount" class="text-2xl font-black text-amber-400 mt-1">0</div></div>
+                    <div class="rounded-2xl bg-slate-900 border border-white/10 p-4"><div class="text-xs text-gray-400">Σύνολο παραγγελιών</div><div id="adminRevenue" class="text-2xl font-black text-emerald-400 mt-1">€0.00</div></div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 mb-4">
+                    <input id="adminOrderSearch" oninput="renderAdminOrders()" placeholder="Αναζήτηση με όνομα ή SS-..." class="flex-1 bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-violet-500">
+                    <button onclick="adminLogout()" class="px-4 py-3 rounded-xl bg-slate-800 text-xs font-bold text-gray-200">Κλείδωμα Admin</button>
+                </div>
+                <div id="adminOrdersList" class="space-y-3"></div>
+                <div class="mt-6 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-[11px] leading-relaxed text-amber-100">
+                    <strong>Demo/local έκδοση:</strong> οι παραγγελίες αποθηκεύονται μόνο στον browser όπου δημιουργούνται. Για να βλέπεις παραγγελίες πελατών από άλλες συσκευές χρειάζεται αργότερα online βάση δεδομένων.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden glass-panel px-5 py-3.5 rounded-2xl border border-brand-500/40 text-white text-xs font-bold shadow-2xl flex items-center gap-3 animate-bounce">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMsg">Μήνυμα Toast</span>
+    </div>
+
+    <script>
+        // DATASET: Subscriptions with Split & Private Pricing
+        const servicesData = [
+            {
+                id: 'netflix',
+                name: 'Netflix Ultra HD 4K',
+                category: 'streaming',
+                icon: 'fa-film',
+                color: 'from-red-600 to-red-900',
+                badgeBg: 'bg-red-500/20 text-red-400 border-red-500/30',
+                split: {
+                    price: 3.80,
+                    officialPrice: 15.99,
+                    slotsAvailable: 2,
+                    totalSlots: 4,
+                    description: 'Δικό σου αυτόνομο PIN προφίλ με Ultra HD 4K ανάλυση σε οικογενειακή συνδρομή.'
+                },
+                private: {
+                    price: 11.90,
+                    officialPrice: 15.99,
+                    description: '100% Ατομικός λογαριασμός Netflix 4K UHD. Αποκλειστικά δικά σου credentials & πλήρης έλεγχος.'
+                }
+            },
+            {
+                id: 'spotify',
+                name: 'Spotify Premium',
+                category: 'music',
+                icon: 'fa-spotify',
+                color: 'from-emerald-600 to-emerald-900',
+                badgeBg: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+                split: {
+                    price: 2.20,
+                    officialPrice: 10.99,
+                    slotsAvailable: 3,
+                    totalSlots: 6,
+                    description: 'Πρόσκληση στο δικό σου προσωπικό Spotify account μέσω Family plan. Offline μουσική χωρίς διαφημίσεις.'
+                },
+                private: {
+                    price: 6.90,
+                    officialPrice: 10.99,
+                    description: '100% Ατομικό Premium Spotify Account. Μοναδικό email/pass με δυνατότητα μεταφοράς των playlists σου.'
+                }
+            },
+            {
+                id: 'chatgpt',
+                name: 'ChatGPT Plus (GPT-4o)',
+                category: 'tools',
+                icon: 'fa-robot',
+                color: 'from-teal-600 to-emerald-800',
+                badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+                split: {
+                    price: 5.90,
+                    officialPrice: 22.00,
+                    slotsAvailable: 1,
+                    totalSlots: 3,
+                    description: 'Πρόσβαση στο ChatGPT Plus με GPT-4o, DALL-E 3 & Voice Mode. Κοινόχρηστο slot υψηλής ταχύτητας.'
+                },
+                private: {
+                    price: 16.50,
+                    officialPrice: 22.00,
+                    description: '100% Ατομικός λογαριασμός ChatGPT Plus. Αποκλειστικό workspace, private chats & API πρόσβαση.'
+                }
+            },
+            {
+                id: 'disney',
+                name: 'Disney+ Premium 4K',
+                category: 'streaming',
+                icon: 'fa-circle-play',
+                color: 'from-blue-600 to-indigo-900',
+                badgeBg: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+                split: {
+                    price: 2.90,
+                    officialPrice: 10.99,
+                    slotsAvailable: 3,
+                    totalSlots: 4,
+                    description: '4K HDR θέαση με Marvel, Star Wars & Pixar. Αυτόνομο προφίλ με κλειδωμένο PIN.'
+                },
+                private: {
+                    price: 7.90,
+                    officialPrice: 10.99,
+                    description: '100% Ατομική συνδρομή Disney+ 4K. Πλήρης διαχείριση προφίλ και συσκευών.'
+                }
+            },
+            {
+                id: 'youtube',
+                name: 'YouTube Premium',
+                category: 'music',
+                icon: 'fa-youtube',
+                color: 'from-red-500 to-rose-800',
+                badgeBg: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                split: {
+                    price: 2.50,
+                    officialPrice: 8.49,
+                    slotsAvailable: 4,
+                    totalSlots: 5,
+                    description: 'Πρόσκληση YouTube Family στο δικό σου Gmail account. Χωρίς διαφημίσεις & περιλαμβάνει YouTube Music.'
+                },
+                private: {
+                    price: 5.90,
+                    officialPrice: 8.49,
+                    description: '100% Ατομική ενεργοποίηση YouTube Premium στο δικό σου αποκλειστικό λογαριασμό.'
+                }
+            },
+            {
+                id: 'canva',
+                name: 'Canva Pro',
+                category: 'tools',
+                icon: 'fa-palette',
+                color: 'from-cyan-500 to-blue-700',
+                badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+                split: {
+                    price: 2.80,
+                    officialPrice: 11.99,
+                    slotsAvailable: 2,
+                    totalSlots: 5,
+                    description: 'Πρόσβαση σε όλα τα Premium templates, Magic AI tools & Brand Kit μέσω ομάδας.'
+                },
+                private: {
+                    price: 7.50,
+                    officialPrice: 11.99,
+                    description: '100% Ατομικός λογαριασμός Canva Pro με δικό σου Brand Kit & αποθηκευτικό χώρο.'
+                }
+            },
+            {
+                id: 'gamepass',
+                name: 'Xbox Game Pass Ultimate',
+                category: 'gaming',
+                icon: 'fa-gamepad',
+                color: 'from-green-600 to-emerald-900',
+                badgeBg: 'bg-green-500/20 text-green-300 border-green-500/30',
+                split: {
+                    price: 4.50,
+                    officialPrice: 14.99,
+                    slotsAvailable: 1,
+                    totalSlots: 2,
+                    description: 'Παιχνίδι σε PC & Xbox Console + EA Play & Cloud Gaming.'
+                },
+                private: {
+                    price: 10.90,
+                    officialPrice: 14.99,
+                    description: '100% Ατομικός λογαριασμός Xbox Game Pass Ultimate 12 μηνών με δικό σου Gamertag.'
+                }
+            },
+            {
+                id: 'midjourney',
+                name: 'Midjourney Standard AI',
+                category: 'tools',
+                icon: 'fa-wand-magic-sparkles',
+                color: 'from-purple-600 to-indigo-900',
+                badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+                split: {
+                    price: 7.90,
+                    officialPrice: 30.00,
+                    slotsAvailable: 2,
+                    totalSlots: 4,
+                    description: '15 ώρες Fast GPU time μηνιαίως για δημιουργία εικόνων AI υψηλής ανάλυσης.'
+                },
+                private: {
+                    price: 22.50,
+                    officialPrice: 30.00,
+                    description: '100% Ατομικός λογαριασμός Midjourney με Private Relax Generation mode.'
+                }
+            }
+        ];
+
+        // STATE VARIABLES
+        let currentPlanType = 'split'; // 'split' or 'private'
+        let currentCategory = 'all';
+        let searchQuery = '';
+        let calcPlanType = 'split';
+        let calcSelectedIds = ['netflix', 'spotify', 'chatgpt'];
+        let cart = [];
+
+        // INITIALIZATION
+        window.onload = function() {
+            renderMarketplace();
+            renderCalculator();
+            updateCartUI();
+        };
+
+        function setPlanType(type) {
+            currentPlanType = type;
+            
+            // Toggle UI Buttons
+            const splitBtn = document.getElementById('planBtnSplit');
+            const privateBtn = document.getElementById('planBtnPrivate');
+            const mBadge = document.getElementById('marketBadge');
+            const mTitle = document.getElementById('marketTitle');
+            const mSub = document.getElementById('marketSub');
+
+            if(type === 'split') {
+                splitBtn.className = "flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all bg-brand-600 text-white shadow-lg";
+                privateBtn.className = "flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-gray-400 hover:text-white";
+                mBadge.textContent = "Κοινοχρηστες Συνδρομες";
+                mBadge.className = "text-xs font-bold text-brand-cyan tracking-widest uppercase";
+                mTitle.textContent = "Διαθέσιμα Split Slots";
+                mSub.textContent = "Μοιράσου το κόστος και πλήρωσε μόνο το δικό σου μερίδιο (-75%).";
+            } else {
+                privateBtn.className = "flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all private-btn text-white shadow-lg";
+                splitBtn.className = "flex-1 py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all text-gray-400 hover:text-white";
+                mBadge.textContent = "100% Ατομικοι Λογαριασμοι (Private)";
+                mBadge.className = "text-xs font-bold text-pink-400 tracking-widest uppercase";
+                mTitle.textContent = "Αποκλειστικοί Ατομικοί Λογαριασμοί";
+                mSub.textContent = "Δικά σου προσωπικά credentials, 100% privacy & πλήρης έλεγχος προφίλ.";
+            }
+
+            renderMarketplace();
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-500', 'text-white');
+                btn.classList.add('bg-slate-900', 'text-gray-300');
+            });
+            event.target.classList.add('bg-brand-500', 'text-white');
+            event.target.classList.remove('bg-slate-900', 'text-gray-300');
+            renderMarketplace();
+        }
+
+        function handleGlobalSearch(val) {
+            searchQuery = val.toLowerCase();
+            renderMarketplace();
+        }
+
+        function renderMarketplace() {
+            const grid = document.getElementById('servicesGrid');
+            grid.innerHTML = '';
+
+            const filtered = servicesData.filter(s => {
+                const matchCat = currentCategory === 'all' || s.category === currentCategory;
+                const matchSearch = s.name.toLowerCase().includes(searchQuery);
+                return matchCat && matchSearch;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 text-sm">Δεν βρέθηκαν διαθέσιμες συνδρομές.</div>`;
+                return;
+            }
+
+            filtered.forEach(service => {
+                const isPrivate = currentPlanType === 'private';
+                const planData = isPrivate ? service.private : service.split;
+                const discount = Math.round((1 - (planData.price / planData.officialPrice)) * 100);
+
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-3xl p-6 flex flex-col justify-between relative group";
+                
+                card.innerHTML = `
+                    <div>
+                        <!-- Header Badges -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr ${service.color} flex items-center justify-center text-white text-xl shadow-md">
+                                <i class="fa-solid ${service.icon}"></i>
+                            </div>
+                            <span class="text-[10px] font-extrabold px-2.5 py-1 rounded-full border ${service.badgeBg}">
+                                -${discount}% ${isPrivate ? 'PRIVATE' : 'SPLIT'}
+                            </span>
+                        </div>
+
+                        <!-- Service Title & Tag -->
+                        <h3 class="text-lg font-black text-white group-hover:text-brand-cyan transition-colors">${service.name}</h3>
+                        <p class="text-xs text-gray-400 mt-1 line-clamp-2">${planData.description}</p>
+
+                        <!-- Features Badge -->
+                        <div class="mt-4 pt-3 border-t border-white/5 space-y-1.5">
+                            ${isPrivate ? `
+                                <div class="flex items-center gap-2 text-[11px] text-pink-300 font-semibold">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                    <span>100% Ατομικά Credentials</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[11px] text-emerald-400">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    <span>Άμεση Παράδοση 24/7</span>
+                                </div>
+                            ` : `
+                                <div class="flex items-center justify-between text-[11px] text-gray-300">
+                                    <span>Διαθέσιμα Slots:</span>
+                                    <span class="font-extrabold text-emerald-400">${planData.slotsAvailable}/${planData.totalSlots}</span>
+                                </div>
+                                <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                                    <div class="bg-brand-cyan h-full rounded-full" style="width: ${(planData.slotsAvailable / planData.totalSlots) * 100}%"></div>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+
+                    <!-- Pricing & CTA -->
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <div>
+                            <span class="block text-[10px] text-gray-400 line-through">Επίσημη: €${planData.officialPrice.toFixed(2)}</span>
+                            <span class="text-xl font-black ${isPrivate ? 'text-pink-400' : 'text-brand-cyan'}">
+                                €${planData.price.toFixed(2)}<span class="text-xs font-normal text-gray-400">/μήνα</span>
+                            </span>
+                        </div>
+                        <button onclick="openCheckoutModal('${service.id}', '${currentPlanType}')" class="${isPrivate ? 'private-btn' : 'gradient-btn'} px-4 py-2.5 rounded-xl font-bold text-xs text-white flex items-center gap-1.5 shadow-md hover:scale-105 transition-transform">
+                            <span>${isPrivate ? 'Απόκτησε' : 'Μπες'}</span>
+                            <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function setCalcPlan(type) {
+            calcPlanType = type;
+            document.getElementById('calcToggleSplit').className = type === 'split' ? "px-2.5 py-1 rounded-lg bg-brand-500 text-white transition-all" : "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all";
+            document.getElementById('calcTogglePrivate').className = type === 'private' ? "px-2.5 py-1 rounded-lg bg-pink-500 text-white transition-all" : "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition-all";
+            document.getElementById('calcTypeLabel').textContent = type === 'split' ? 'Τιμή Split Shop:' : 'Τιμή Private Account:';
+            renderCalculator();
+        }
+
+        function renderCalculator() {
+            const container = document.getElementById('calcServicesList');
+            container.innerHTML = '';
+
+            servicesData.forEach(s => {
+                const isChecked = calcSelectedIds.includes(s.id);
+                const planData = calcPlanType === 'private' ? s.private : s.split;
+
+                const item = document.createElement('label');
+                item.className = `flex items-center justify-between p-2.5 rounded-xl border cursor-pointer transition-all ${isChecked ? 'bg-brand-500/10 border-brand-500/40' : 'bg-slate-900/60 border-white/5 opacity-70'}`;
+                item.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleCalcService('${s.id}')" class="rounded text-brand-500 focus:ring-0">
+                        <span class="text-xs font-bold text-white">${s.name}</span>
+                    </div>
+                    <span class="text-xs font-extrabold ${calcPlanType === 'private' ? 'text-pink-400' : 'text-brand-cyan'}">€${planData.price.toFixed(2)}</span>
+                `;
+                container.appendChild(item);
+            });
+
+            calculateSavings();
+        }
+
+        function toggleCalcService(id) {
+            if(calcSelectedIds.includes(id)) {
+                calcSelectedIds = calcSelectedIds.filter(i => i !== id);
+            } else {
+                calcSelectedIds.push(id);
+            }
+            renderCalculator();
+        }
+
+        function calculateSavings() {
+            let totalOfficial = 0;
+            let totalSplit = 0;
+
+            servicesData.forEach(s => {
+                if(calcSelectedIds.includes(s.id)) {
+                    const planData = calcPlanType === 'private' ? s.private : s.split;
+                    totalOfficial += planData.officialPrice;
+                    totalSplit += planData.price;
+                }
+            });
+
+            const yearlySavings = (totalOfficial - totalSplit) * 12;
+
+            document.getElementById('calcOfficialPrice').textContent = `€${totalOfficial.toFixed(2)}/μήνα`;
+            document.getElementById('calcSplitPrice').innerHTML = `€${totalSplit.toFixed(2)}<span class="text-xs text-gray-400 font-normal">/μήνα</span>`;
+            document.getElementById('calcYearlySavings').textContent = `€${yearlySavings.toFixed(2)}/έτος`;
+        }
+
+        function applyCalcToCart() {
+            calcSelectedIds.forEach(id => {
+                addToCart(id, calcPlanType);
+            });
+            showToast('Το πακέτο υπολογιστή προστέθηκε στο καλάθι!', 'success');
+            toggleCartModal();
+        }
+
+        function openCheckoutModal(serviceId, planType) {
+            const service = servicesData.find(s => s.id === serviceId);
+            if(!service) return;
+
+            const isPrivate = planType === 'private';
+            const planData = isPrivate ? service.private : service.split;
+            const container = document.getElementById('modalContent');
+
+            container.innerHTML = `
+                <div class="space-y-5">
+                    <!-- Header -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr ${service.color} flex items-center justify-center text-white text-xl shadow-lg">
+                            <i class="fa-solid ${service.icon}"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-white">${service.name}</h3>
+                            <span class="text-xs font-bold ${isPrivate ? 'text-pink-400' : 'text-brand-cyan'}">
+                                ${isPrivate ? '100% Ατομικός Λογαριασμός (Private)' : 'Κοινόχρηστο Slot (Split)'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Details Box -->
+                    <div class="bg-slate-900/90 p-4 rounded-2xl border border-white/10 space-y-3 text-xs">
+                        <p class="text-gray-300 leading-relaxed">${planData.description}</p>
+                        <div class="pt-2 border-t border-white/10 flex justify-between items-center font-bold">
+                            <span class="text-gray-400">Μηνιαία Συνδρομή:</span>
+                            <span class="text-lg ${isPrivate ? 'text-pink-400' : 'text-brand-cyan'}">€${planData.price.toFixed(2)}/μήνα</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Fields -->
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1">Email Αποστολής Στοιχείων</label>
+                            <input type="email" id="modalUserEmail" placeholder="your@email.com" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                        ${!isPrivate ? `
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1">Όνομα Προφίλ (για το PIN slot)</label>
+                                <input type="text" id="modalProfileName" placeholder="π.χ. Giorgos" class="w-full bg-slate-900 border border-white/10 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-brand-500">
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Guarantee Badge -->
+                    <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-base"></i>
+                        <span>Καλύπτεται από την Εγγύηση 100% Επιστροφής Χρημάτων Split Guarantee.</span>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-3 pt-2">
+                        <button onclick="addToCart('${service.id}', '${planType}'); closeCheckoutModal();" class="flex-1 glass-panel hover:bg-white/10 py-3.5 rounded-xl font-bold text-xs text-white">
+                            Προσθήκη στο Καλάθι
+                        </button>
+                        <button onclick="directCheckout('${service.id}', '${planType}')" class="flex-1 ${isPrivate ? 'private-btn' : 'gradient-btn'} py-3.5 rounded-xl font-bold text-xs text-white shadow-lg">
+                            Άμεση Αγορά
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function addToCart(serviceId, planType) {
+            const service = servicesData.find(s => s.id === serviceId);
+            if(!service) return;
+
+            const planData = planType === 'private' ? service.private : service.split;
+            
+            cart.push({
+                id: service.id,
+                name: service.name,
+                planType: planType,
+                price: planData.price
+            });
+
+            updateCartUI();
+            showToast(`${service.name} (${planType.toUpperCase()}) προστέθηκε στο καλάθι!`, 'success');
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartBadge').textContent = cart.length;
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
+
+            let total = 0;
+
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-gray-400 text-xs">Το καλάθι σου είναι άδειο.</div>`;
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    const el = document.createElement('div');
+                    el.className = "flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-white/5 text-xs";
+                    el.innerHTML = `
+                        <div>
+                            <h4 class="font-bold text-white">${item.name}</h4>
+                            <span class="text-[10px] ${item.planType === 'private' ? 'text-pink-400' : 'text-brand-cyan'} font-semibold uppercase">${item.planType}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-black text-white">€${item.price.toFixed(2)}</span>
+                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(el);
+                });
+            }
+
+            document.getElementById('cartTotalPrice').textContent = `€${total.toFixed(2)}/μήνα`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cartModal');
+            modal.classList.toggle('hidden');
+        }
+
+        const REVOLUT_PAYMENT_URL = ''; // Βάλε εδώ το επίσημο Revolut Business Payment Link όταν το έχεις.
+
+        function getCartTotal() {
+            return cart.reduce((sum, item) => sum + item.price, 0);
+        }
+
+        function openRevolutPayment(amount) {
+            if(!REVOLUT_PAYMENT_URL) {
+                showToast(`Checkout έτοιμο (€${amount.toFixed(2)}). Χρειάζεται να προστεθεί Revolut Business Payment Link.`, 'info');
+                return;
+            }
+            window.open(REVOLUT_PAYMENT_URL, '_blank', 'noopener,noreferrer');
+        }
+
+        let pendingPaymentOrderId = null;
+
+        function makeOrderId() {
+            return 'SS-' + Date.now().toString().slice(-6);
+        }
+
+        function cartTotal() {
+            return cart.reduce((sum, item) => sum + item.price, 0);
+        }
+
+        function openPaymentModal() {
+            if(cart.length === 0) { showToast('Το καλάθι είναι άδειο!', 'error'); return; }
+            pendingPaymentOrderId = makeOrderId();
+            document.getElementById('paymentOrderId').textContent = pendingPaymentOrderId;
+            document.getElementById('paymentTotal').textContent = `€${cartTotal().toFixed(2)}`;
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function checkoutCart() {
+            if(cart.length === 0) { showToast('Το καλάθι είναι άδειο!', 'error'); return; }
+            toggleCartModal();
+            openPaymentModal();
+        }
+
+        function directCheckout(id, type) {
+            const service = servicesData.find(s => s.id === id);
+            if(!service) return;
+            const planData = type === 'private' ? service.private : service.split;
+            cart = [{ id: service.id, name: service.name, planType: type, price: planData.price }];
+            updateCartUI();
+            closeCheckoutModal();
+            openPaymentModal();
+        }
+
+        function continueToRevolut() {
+            const name = document.getElementById('paymentCustomerName').value.trim();
+            if(name.length < 3) { showToast('Γράψε πρώτα το ονοματεπώνυμό σου.', 'error'); return; }
+            const note = `${name} - ${pendingPaymentOrderId}`;
+            try {
+                const order = { orderId: pendingPaymentOrderId, name, total: cartTotal(), items: [...cart], note, createdAt: new Date().toISOString(), status: 'pending_payment' };
+                const orders = JSON.parse(localStorage.getItem('splitshop_orders') || '[]');
+                if(!orders.some(o => o.orderId === order.orderId)) orders.unshift(order);
+                localStorage.setItem('splitshop_orders', JSON.stringify(orders));
+                localStorage.setItem('splitshop_last_order', JSON.stringify(order));
+            } catch(e) {}
+            showToast(`Η παραγγελία ${pendingPaymentOrderId} καταχωρήθηκε.`, 'info');
+            setTimeout(() => window.open('https://revolut.me/michich1', '_blank', 'noopener,noreferrer'), 500);
+        }
+
+
+        // SIMPLE LOCAL ADMIN (starter version)
+        let adminUnlocked = false;
+
+        async function hashText(value) {
+            const bytes = new TextEncoder().encode(value);
+            const hash = await crypto.subtle.digest('SHA-256', bytes);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+        }
+
+        function openAdmin() {
+            document.getElementById('adminModal').classList.remove('hidden');
+            const hasPin = !!localStorage.getItem('splitshop_admin_pin_hash');
+            document.getElementById('adminSetupView').classList.toggle('hidden', hasPin || adminUnlocked);
+            document.getElementById('adminLoginView').classList.toggle('hidden', !hasPin || adminUnlocked);
+            document.getElementById('adminDashboardView').classList.toggle('hidden', !adminUnlocked);
+            if(adminUnlocked) renderAdminOrders();
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        async function createAdminPin() {
+            const pin = document.getElementById('adminSetupPin').value.trim();
+            if(pin.length < 6) { showToast('Το Admin PIN πρέπει να έχει τουλάχιστον 6 χαρακτήρες.', 'error'); return; }
+            localStorage.setItem('splitshop_admin_pin_hash', await hashText(pin));
+            document.getElementById('adminSetupPin').value = '';
+            adminUnlocked = true;
+            showToast('Το Admin δημιουργήθηκε!', 'success');
+            openAdmin();
+        }
+
+        async function adminLogin() {
+            const pin = document.getElementById('adminLoginPin').value;
+            const saved = localStorage.getItem('splitshop_admin_pin_hash');
+            if(!saved || await hashText(pin) !== saved) { showToast('Λάθος Admin PIN.', 'error'); return; }
+            document.getElementById('adminLoginPin').value = '';
+            adminUnlocked = true;
+            openAdmin();
+        }
+
+        function adminLogout() {
+            adminUnlocked = false;
+            openAdmin();
+        }
+
+        function getOrders() {
+            try { return JSON.parse(localStorage.getItem('splitshop_orders') || '[]'); }
+            catch(e) { return []; }
+        }
+
+        function saveOrders(orders) {
+            localStorage.setItem('splitshop_orders', JSON.stringify(orders));
+        }
+
+        function statusLabel(s) {
+            return ({pending_payment:'Αναμονή πληρωμής', paid:'Πληρώθηκε', completed:'Ολοκληρώθηκε', cancelled:'Ακυρώθηκε'})[s] || s;
+        }
+
+        function updateOrderStatus(id, status) {
+            const orders = getOrders();
+            const order = orders.find(o => o.orderId === id);
+            if(order) { order.status = status; saveOrders(orders); renderAdminOrders(); showToast(`${id}: ${statusLabel(status)}`, 'success'); }
+        }
+
+        function deleteOrder(id) {
+            if(!confirm(`Διαγραφή παραγγελίας ${id};`)) return;
+            saveOrders(getOrders().filter(o => o.orderId !== id));
+            renderAdminOrders();
+        }
+
+        function renderAdminOrders() {
+            const orders = getOrders();
+            const q = (document.getElementById('adminOrderSearch')?.value || '').toLowerCase();
+            const shown = orders.filter(o => `${o.orderId} ${o.name}`.toLowerCase().includes(q));
+            document.getElementById('adminOrdersCount').textContent = orders.length;
+            document.getElementById('adminPendingCount').textContent = orders.filter(o => o.status === 'pending_payment').length;
+            document.getElementById('adminRevenue').textContent = `€${orders.filter(o => o.status !== 'cancelled').reduce((s,o)=>s+Number(o.total||0),0).toFixed(2)}`;
+            const box = document.getElementById('adminOrdersList');
+            if(!shown.length) { box.innerHTML = '<div class="text-center py-10 text-sm text-gray-500">Δεν υπάρχουν παραγγελίες ακόμα.</div>'; return; }
+            box.innerHTML = shown.map(o => `
+                <div class="rounded-2xl bg-slate-900/90 border border-white/10 p-4">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <strong class="text-white">${o.orderId}</strong>
+                                <span class="text-[10px] px-2 py-1 rounded-full bg-violet-500/15 text-violet-300 font-bold">${statusLabel(o.status)}</span>
+                            </div>
+                            <div class="text-sm font-bold text-gray-200 mt-2">${o.name}</div>
+                            <div class="text-[11px] text-gray-500 mt-1">${new Date(o.createdAt).toLocaleString('el-GR')}</div>
+                            <div class="text-[11px] text-gray-400 mt-2">${(o.items||[]).map(i => `${i.name} (${i.planType})`).join(' · ')}</div>
+                        </div>
+                        <div class="lg:text-right">
+                            <div class="text-xl font-black text-emerald-400">€${Number(o.total||0).toFixed(2)}</div>
+                            <div class="flex flex-wrap lg:justify-end gap-2 mt-3">
+                                <button onclick="updateOrderStatus('${o.orderId}','pending_payment')" class="px-2.5 py-2 rounded-lg bg-amber-500/10 text-amber-300 text-[10px] font-bold">Αναμονή</button>
+                                <button onclick="updateOrderStatus('${o.orderId}','paid')" class="px-2.5 py-2 rounded-lg bg-blue-500/10 text-blue-300 text-[10px] font-bold">Πληρώθηκε</button>
+                                <button onclick="updateOrderStatus('${o.orderId}','completed')" class="px-2.5 py-2 rounded-lg bg-emerald-500/10 text-emerald-300 text-[10px] font-bold">Ολοκληρώθηκε</button>
+                                <button onclick="updateOrderStatus('${o.orderId}','cancelled')" class="px-2.5 py-2 rounded-lg bg-red-500/10 text-red-300 text-[10px] font-bold">Ακυρώθηκε</button>
+                                <button onclick="deleteOrder('${o.orderId}')" class="px-2.5 py-2 rounded-lg bg-slate-800 text-gray-400 text-[10px]"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+
+        // OWNER MODAL & FAQ ACCORDION
+        function openOwnerModal() {
+            document.getElementById('ownerModal').classList.remove('hidden');
+        }
+
+        function closeOwnerModal() {
+            document.getElementById('ownerModal').classList.add('hidden');
+        }
+
+        function handleOwnerSubmit(e) {
+            e.preventDefault();
+            closeOwnerModal();
+            showToast('Η συνδρομή καταχωρήθηκε! Θα επικοινωνήσουμε μαζί σας εντός 1 ώρας.', 'success');
+        }
+
+        function toggleFaq(index) {
+            const ans = document.getElementById(`faqAnswer-${index}`);
+            const icon = document.getElementById(`faqIcon-${index}`);
+            ans.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.textContent = msg;
+            if(type === 'success') {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            } else if(type === 'info') {
+                toastIcon.className = "fa-solid fa-circle-info text-brand-cyan text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-triangle-exclamation text-red-400 text-lg";
+            }
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
